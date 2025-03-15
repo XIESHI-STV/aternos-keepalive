@@ -1,0 +1,29 @@
+name: Aternos Keepalive
+on:
+  schedule:
+    - cron: '*/9 * * * *'  # 每9分钟触发一次
+  workflow_dispatch:       # 允许手动运行
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run keepalive script
+        env:
+          ATERNO_USER: ${{ secrets.ATERNO_USER }}
+          ATERNO_PASS: ${{ secrets.ATERNO_PASS }}
+          SERVER_NAME: ${{ secrets.SERVER_NAME }}
+        run: |
+          python keepalive.py
